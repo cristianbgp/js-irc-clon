@@ -4,6 +4,8 @@ const $buttonCreateChannel = document.getElementById(
   "js-button-create-channel"
 );
 const $inputChannel = document.getElementById("js-input-channel");
+const $deleteLocalStorage = document.getElementById("clear-data");
+const $allowNotifications = document.getElementById("allow-notifications");
 
 document.querySelector("body").addEventListener("click", function(event) {
   if (event.target.classList.contains("channel")) {
@@ -129,33 +131,10 @@ saveMessages = (text, obj, user, date, channel) => {
   }
 };
 
-showNotification = (messageData, visible) => {
-  if (localStorage.getItem("notification") == "granted" && visible) {
-    let body = {
-      body: `${messageData.user} says: ${messageData.text}`
-    };
-    new Notification(`${messageData.current}`, body);
-  }
-};
-
-createChannelNotification = (checkChannel, newChannel) => {
-  if (!checkChannel && localStorage.getItem("notification") == "granted") {
-    let body = {
-      body: `${newChannel} created`
-    };
-    new Notification("New Channel", body);
-  }
-};
-
 const btn = document.getElementById("js-add-user-message");
 
 //LOAD ALL USER DATA IN LOCAL STORAGE
 socket.addEventListener("open", () => {
-  //Ask permision to nofication
-  Notification.requestPermission().then(value => {
-    localStorage.setItem("notification", value);
-  });
-
   //Getting dom elements and storare data
   let lsData = localStorage.getItem("data");
   let data = parseLocalStorage();
@@ -305,12 +284,40 @@ function showWelcomeUsername() {
   $titleMessage.textContent += parseLocalStorage().user;
 }
 
-showWelcomeUsername();
-
 $openLightBox.addEventListener("click", () => {
   $inputChannel.focus();
 });
 
+$deleteLocalStorage.addEventListener("click", () => {
+  localStorage.clear();
+  location.reload();
+});
+
+$allowNotifications.addEventListener("click", () => {
+  Notification.requestPermission().then(value => {
+    localStorage.setItem("notification", value);
+    $allowNotifications.style.backgroundColor = "rgb(150, 253, 109)";
+  });
+});
+showNotification = (messageData, visible) => {
+  if (localStorage.getItem("notification") == "granted" && visible) {
+    let body = {
+      body: `${messageData.user} says: ${messageData.text}`
+    };
+    new Notification(`${messageData.current}`, body);
+  }
+};
+
+createChannelNotification = (checkChannel, newChannel) => {
+  if (!checkChannel && localStorage.getItem("notification") == "granted") {
+    let body = {
+      body: `${newChannel} created`
+    };
+    new Notification("New Channel", body);
+  }
+};
+
+showWelcomeUsername();
 function focusMessagesInput() {
   let $inputMessage = document.getElementById("js-input-user-message");
   $inputMessage.focus();
