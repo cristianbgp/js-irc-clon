@@ -1,5 +1,9 @@
 # JS IRC Clon
 
+![Login View IRCool](/docs/login-view.gif)
+
+![Main View IRCool](/docs/main-view.png)
+
 Create a multi channel chat application using the WebSocket server in [codeableorg/websocket-server](https://github.com/codeableorg/websocket-server) as your WebSocket server.
 
 ## Team
